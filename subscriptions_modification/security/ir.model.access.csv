@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_age_group,access_age_group,model_age_group,base.group_user,1,1,1,1
+access_res_branch,access_res_branch,model_res_branch,base.group_user,1,1,1,1
+access_res_coach,access_res_coach,model_res_coach,base.group_user,1,1,1,1
+access_res_team,access_res_team,model_res_team,base.group_user,1,1,1,1
+access_session_session,access_session_session,model_session_session,base.group_user,1,1,1,1

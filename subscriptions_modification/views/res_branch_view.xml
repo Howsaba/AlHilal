@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+
+        <record id="res_branch_view_form" model="ir.ui.view">
+            <field name="name">res.branch.view.form</field>
+            <field name="model">res.branch</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_branch_view_tree" model="ir.ui.view">
+            <field name="name">res.branch.view.tree</field>
+            <field name="model">res.branch</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="res_branch_action" model="ir.actions.act_window">
+            <field name="name">Branch</field>
+            <field name="res_model">res.branch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Branch found. Let's create one!
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem
+            id="res_branch_menu"
+            name="Branch"
+            action="subscriptions_modification.res_branch_action"
+            parent="hr.menu_hr_root"
+            sequence="1000"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,51 @@
+<odoo>
+    <data>
+
+        <record id="session_session_view_form" model="ir.ui.view">
+            <field name="name">session.session.view.form</field>
+            <field name="model">session.session</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="session_session_view_tree" model="ir.ui.view">
+            <field name="name">session.session.view.tree</field>
+            <field name="model">session.session</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="session_session_action" model="ir.actions.act_window">
+            <field name="name">Session</field>
+            <field name="res_model">session.session</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Session found. Let's create one!
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem
+            id="session_session_menu"
+            name="Session"
+            action="subscriptions_modification.session_session_action"
+            parent="subscriptions_modification.membership_conf_menu"
+            sequence="5"/>
+
+    </data>
+</odoo>
