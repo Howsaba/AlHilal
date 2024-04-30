@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="subscription_form_view_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.view.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_subscription.sale_subscription_primary_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                        <page string="Membership Details">
+                            <group>
+                                <group>
+                                    <field name="age_group_id"/>
+                                    <field name="res_team_id"/>
+                                </group>
+                                <group>
+                                    <field name="session_id"/>
+                                    <field name="payment_method_id"/>
+                                    <field name="payment_status"/>
+                                </group>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

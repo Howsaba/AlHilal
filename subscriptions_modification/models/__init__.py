@@ -5,3 +5,4 @@ from . import partner
 from . import res_coach
 from . import res_branch
 from . import age_group
+from . import sale_order
