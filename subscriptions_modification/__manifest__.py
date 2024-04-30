@@ -15,6 +15,7 @@
         'views/res_partner_view.xml',
         'views/res_team_view.xml',
         'views/session_view.xml',
+
     ],
     'installable': True,
     'application': True,
