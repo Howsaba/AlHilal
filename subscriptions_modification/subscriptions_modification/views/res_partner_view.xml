@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+
+        <record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="function" position="after">
+                    <field name="birthday" />
+                    <field name="nationality_id" />
+                </field>
+                <field name="name" position="after">
+                    <field name="arabic_name" placeholder="Arabic Name"/>
+                </field>
+
+                <field name="category_id" position="after">
+                    <field name="branch_id" />
+                </field>
+
+                <xpath expr="//span[hasclass('o_form_label')]" position="before">
+                    <field name="id_type" widget="radio" options="{'horizontal': true}"/>
+                    <field name="national_id" invisible="id_type in ['passport']" required="id_type == 'national_iqama'"/>
+                    <field name="passport_number" invisible="id_type in ['national_iqama']" required="id_type == 'passport'"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="res_coach_view_form" model="ir.ui.view">
+            <field name="name">res.coach.view.form</field>
+            <field name="model">res.coach</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="mobile"/>
+                            </group>
+                            <group>
+                                <field name="team_id"/>
+                                <field name="branch_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_coach_view_tree" model="ir.ui.view">
+            <field name="name">res.coach.view.tree</field>
+            <field name="model">res.coach</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="mobile"/>
+                    <field name="team_id"/>
+                    <field name="branch_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="res_coach_action" model="ir.actions.act_window">
+            <field name="name">Coach</field>
+            <field name="res_model">res.coach</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Coach found. Let's create one!
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem
+            id="res_coach_menu"
+            name="Coach"
+            action="subscriptions_modification.res_coach_action"
+            parent="subscriptions_modification.membership_conf_menu"
+            sequence="3"/>
+
+    </data>
+</odoo>
