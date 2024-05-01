@@ -6,7 +6,7 @@
     'version': '17.0.1.0.0',
     'summary': 'Subscription Modification',
     'sequence': -1,
-    'depends': ['base', 'sale_subscription', 'hr'],
+    'depends': ['base', 'sale_subscription', 'hr', 'product'],
     'data': [
         'security/ir.model.access.csv',
         'views/age_group_view.xml',
@@ -16,6 +16,8 @@
         'views/res_team_view.xml',
         'views/session_view.xml',
         'views/subscription_view.xml',
+        'views/sale_subscription_plan_view.xml',
+        'views/product_template_view.xml',
     ],
     'installable': True,
     'application': True,
