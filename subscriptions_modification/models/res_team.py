@@ -9,6 +9,6 @@ class ResTeam(models.Model):
     arabic_name = fields.Char(required=True)
     branch_id = fields.Many2one('res.branch', required=True)
     session_id = fields.Many2one('session.session', required=True)
-    coach_id = fields.Many2one('res.coach', required=True)
+    coach_id = fields.Many2one('res.coach')
     team_capacity = fields.Integer(required=True)
     note = fields.Html()

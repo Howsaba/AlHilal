@@ -14,6 +14,34 @@
                        position="after">
                     <field name="branch_id"/>
                 </xpath>
+                <xpath expr="//div[@name='options']" position="inside">
+                    <span class="d-inline-block">
+                        <field name="is_clothes"/>
+                        <label for="is_clothes"/>
+                    </span>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="product_product_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.view.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="product_arabic_name"/>
+                </xpath>
+                <xpath expr="//page[@name='general_information']/group[1]/group[@name='group_standard_price']/field[@name='company_id']"
+                       position="after">
+                    <field name="branch_id"/>
+                </xpath>
+                <xpath expr="//div[@name='options']" position="inside">
+                    <span class="d-inline-block">
+                        <field name="is_clothes"/>
+                        <label for="is_clothes"/>
+                    </span>
+                </xpath>
             </field>
         </record>
 

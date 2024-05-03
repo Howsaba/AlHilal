@@ -6,7 +6,7 @@
     'name': 'Create Player API',
     'version': '17.0.1.0.0',
     'author': "Remon Salem",
-    'depends': ['base','subscriptions_modification'],
+    'depends': ['base','subscriptions_modification', 'mail_plugin', 'stock'],
     'data': [
     ],
     'installable': True,
