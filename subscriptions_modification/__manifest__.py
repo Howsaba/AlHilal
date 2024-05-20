@@ -18,6 +18,7 @@
         'views/subscription_view.xml',
         'views/sale_subscription_plan_view.xml',
         'views/product_template_view.xml',
+        'views/account_move_view.xml',
     ],
     'installable': True,
     'application': True,

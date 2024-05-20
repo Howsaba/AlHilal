@@ -7,3 +7,4 @@ from . import age_group
 from . import sale_order
 from . import sale_subscription_plan
 from . import product_template
+from . import account_move
