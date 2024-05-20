@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <record id="view_location_form_inherit" model="ir.ui.view">
+            <field name="name">stock.location.inherit</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <field name="usage" position="before">
+                    <field name="branch_id"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="stock_picking_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="partner_id" position="after">
+<!--                        <field name="code" invisible="1"/>-->
+                        <field name="branch_id" invisible="picking_type_code != 'outgoing'"/>
+                    </field>
+
+                </data>
+            </field>
+        </record>
+
+        <!--        branch view-->
+        <record id="res_branch_form_inherit" model="ir.ui.view">
+            <field name="name">res.branch.inherit.form</field>
+            <field name="model">res.branch</field>
+            <field name="inherit_id" ref="subscriptions_modification.res_branch_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="inside">
+                    <group>
+                        <field name="location_ids" widget="many2many_tags"/>
+                        <field name="analytic_account_ids" widget="many2many_tags"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+
+</odoo>
+

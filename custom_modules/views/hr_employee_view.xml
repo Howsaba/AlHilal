@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+<!--        employee view-->
+       <record id="hr_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.inherit.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/group" position="inside">
+                    <field name="branch_ids" widget="many2many_tags"/>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']/group" position="inside">
+                    <group string="Extra Info">
+                        <field name="passport_or_id_issue_date"/>
+                        <field name="passport_or_id_expiry_date"/>
+                        <field name="contact_address"/>
+                        <field name="relative_type"/>
+                        <field name="english_name"/>
+                        <field name="employee_number"/>
+                        <field name="date_of_birth"/>
+                        <field name="religion"/>
+                        <field name="other_religion" invisible="religion != 'other'"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
