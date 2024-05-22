@@ -54,6 +54,10 @@
                                 </div>
                             </button>
                         </div>
+                        <field name="request_stage" invisible="1"/>
+                        <widget name="web_ribbon" title="Inventory" invisible="request_stage != 'inventory' or state not in ['pending', 'in_progress']"/>
+                        <widget name="web_ribbon" title="Purchase" invisible="request_stage != 'purchase' or state not in ['pending', 'in_progress']"/>
+                        <widget name="web_ribbon" title="Pending" invisible="request_stage != 'pending' or state not in ['pending', 'in_progress']"/>
                         <div class="oe_title">
                             <h1>
                                 <field name="name"/>
@@ -63,6 +67,8 @@
                             <group>
                                 <field name="request_date" readonly="state != 'draft'"/>
                                 <field name="tag_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                                <field name="department_id" readonly="state != 'draft'"/>
+                                <field name="branch_id" readonly="state != 'draft'"/>
                             </group>
                             <group string="Inventory Info" groups="stock.group_stock_manager,stock.group_stock_user">
                                 <field name="operation_type_id" readonly="state not in ['draft', 'pending']"/>
@@ -90,6 +96,11 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -101,6 +112,7 @@
                 <tree>
                     <field name="name"/>
                     <field name="request_date"/>
+                    <field name="state" widget="badge"/>
                 </tree>
             </field>
         </record>

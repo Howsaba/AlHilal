@@ -6,7 +6,7 @@
     'version': '17.0.1.0.0',
     'summary': 'Material Request',
     'sequence': -1,
-    'depends': ['base', 'stock', 'purchase', 'mail'],
+    'depends': ['base', 'stock', 'purchase', 'mail', 'subscriptions_modification'],
     'data': [
         'security/ir.model.access.csv',
         'views/material_request_view.xml',

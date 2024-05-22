@@ -9,6 +9,8 @@ class MaterialRequest(models.Model):
     name = fields.Char(default='New', readonly=True)
     request_date = fields.Date(tracking=True)
     tag_ids = fields.Many2many('request.tag', tracking=True)
+    department_id = fields.Many2one('hr.department', tracking=True)
+    branch_id = fields.Many2one('res.branch', tracking=True)
     source_id = fields.Many2one('stock.location', tracking=True)
     destination_id = fields.Many2one('stock.location', tracking=True)
     operation_type_id = fields.Many2one('stock.picking.type', domain=[('code', '=', 'internal')])
@@ -25,6 +27,20 @@ class MaterialRequest(models.Model):
                               ('done', 'Done'),
                               ('cancel', 'Cancelled'),
                               ], default='draft', tracking=True)
+    request_stage = fields.Selection([('inventory', 'Inventory'),
+                                      ('purchase', 'Purchase'),
+                                      ('pending', 'Pending'),
+                                      ],compute="compute_request_stage")
+    
+    @api.depends('material_request_line_ids.is_available')
+    def compute_request_stage(self):
+        for rec in self:
+            if all(x.is_available and not x.transferred for x in rec.material_request_line_ids):
+                rec.request_stage = 'inventory'
+            elif all(not x.is_available and not x.purchased for x in rec.material_request_line_ids):
+                rec.request_stage = 'purchase'
+            else:
+                rec.request_stage = 'pending'
 
     @api.depends('picking_ids', 'purchase_order_ids')
     def compute_counts(self):
