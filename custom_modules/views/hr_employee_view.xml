@@ -12,16 +12,18 @@
                 </xpath>
                 <xpath expr="//page[@name='personal_information']/group" position="inside">
                     <group string="Extra Info">
+                        <field name="passport_or_id_issue_ids" widget="many2many_tags"/>
                         <field name="passport_or_id_issue_date"/>
                         <field name="passport_or_id_expiry_date"/>
-                        <field name="contact_address"/>
-                        <field name="relative_type"/>
                         <field name="english_name"/>
                         <field name="employee_number"/>
-                        <field name="date_of_birth"/>
                         <field name="religion"/>
                         <field name="other_religion" invisible="religion != 'other'"/>
                     </group>
+                </xpath>
+                <xpath expr="//notebook/page[@name='personal_information']/group/group[@name='emergency']" position="inside">
+                    <field name="contact_address"/>
+                    <field name="relative_type"/>
                 </xpath>
             </field>
         </record>

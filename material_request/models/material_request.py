@@ -30,9 +30,9 @@ class MaterialRequest(models.Model):
     request_stage = fields.Selection([('inventory', 'Inventory'),
                                       ('purchase', 'Purchase'),
                                       ('pending', 'Pending'),
-                                      ],compute="compute_request_stage")
+                                      ], compute="compute_request_stage", store=True)
     
-    @api.depends('material_request_line_ids.is_available')
+    @api.depends('material_request_line_ids.is_available', 'material_request_line_ids.transferred', 'material_request_line_ids.purchased')
     def compute_request_stage(self):
         for rec in self:
             if all(x.is_available and not x.transferred for x in rec.material_request_line_ids):
@@ -71,9 +71,9 @@ class MaterialRequest(models.Model):
 
     @api.model
     def create(self, vals_list):
-        if 'name' not in vals_list or vals_list['name'] == _('New'):
-            vals_list['name'] = self.env['ir.sequence'].next_by_code('material.request') or _('New')
-        return super().create(vals_list)
+        res = super().create(vals_list)
+        res.name = self.env['ir.sequence'].next_by_code('material.request') or _('New')
+        return res
 
     def action_confirm(self):
         self.check_availability()
