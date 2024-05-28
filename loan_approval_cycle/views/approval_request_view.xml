@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+
+        <record id="approval_request_view_form_inherit" model="ir.ui.view">
+            <field name="name">approval.request.inherit.form</field>
+            <field name="model">approval.request</field>
+            <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <field name="salary_attachment_id" invisible="1"/>
+                    <button name="action_view_salary_attachment" class="oe_stat_button" icon="fa-book" type="object"
+                            invisible="(salary_attachment_id == False)">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Salary Attachment</span>
+                        </div>
+                    </button>
+                    <field name="payment_id" invisible="1"/>
+                    <button name="action_view_payment" class="oe_stat_button" icon="fa-book" type="object"
+                            invisible="(payment_id == False)">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Payment</span>
+                        </div>
+                    </button>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <field name="loan_flag" invisible="1"/>
+                    <field name="end_of_service_flag" invisible="1"/>
+                    <button name="create_payment" string="Register Payment" type="object" invisible="not loan_flag or request_status not in ['approved']" class="btn-primary"/>
+                </xpath>
+                <xpath expr="//group/group" position="inside">
+                    <field name="journal_id" invisible="not loan_flag or request_status != 'approved'" required="loan_flag and request_status == 'approved'"/>
+                    <field name="department_id" invisible="not loan_flag and not end_of_service_flag" />
+                    <field name="position_id" invisible="not loan_flag and not end_of_service_flag" />
+                    <field name="id_no" invisible="not loan_flag" required="loan_flag"/>
+                    <field name="joining_date" invisible="not end_of_service_flag" required="end_of_service_flag"/>
+                    <field name="last_emp_date" invisible="not end_of_service_flag" required="end_of_service_flag"/>
+                    <field name="reason" invisible="not end_of_service_flag" required="end_of_service_flag"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

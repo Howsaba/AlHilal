@@ -8,6 +8,7 @@
     'sequence': -1,
     'depends': ['base', 'stock', 'purchase', 'mail', 'subscriptions_modification'],
     'data': [
+        'security/sequrity.xml',
         'security/ir.model.access.csv',
         'views/material_request_view.xml',
     ],

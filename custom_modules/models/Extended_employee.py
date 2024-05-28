@@ -17,3 +17,34 @@ class Employee2(models.Model):
           ('other', 'Other')],
          string='Religion')
     other_religion = fields.Char(string='Other Religion')
+
+
+    insurance_no = fields.Char()
+    policy_number = fields.Char()
+    category = fields.Char()
+    activation_code = fields.Date()
+    cost = fields.Float()
+    insurance_council = fields.Char('Availability at the Health Insurance Council')
+    insurance_council_date = fields.Date('Health Insurance Council start date')
+
+    payment_method_selection = fields.Selection(
+        [('cash', 'Cash'),
+         ('bank', 'Bank'),
+         ('transfer', 'Transfer'),
+         ('cheque', 'Cheque')],
+        default='cash')
+    bank_name = fields.Char()
+    iban = fields.Char('IBAN')
+    account_owner_name = fields.Char()
+    account_owner_arabic_name = fields.Char()
+    branch_name = fields.Char()
+    branch_arabic_name = fields.Char()
+    swift_code = fields.Char()
+    sort_code = fields.Char()
+    account_no = fields.Char()
+    country = fields.Many2one('res.country')
+    bank_location = fields.Many2one('res.country')
+    bank_type = fields.Selection(
+        [('account', 'Bank Account'),
+         ('card', 'Employee Card')],
+        default='account')

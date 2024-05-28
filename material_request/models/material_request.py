@@ -6,6 +6,7 @@ class MaterialRequest(models.Model):
     _name = "material.request"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, readonly=True)
     name = fields.Char(default='New', readonly=True)
     request_date = fields.Date(tracking=True)
     tag_ids = fields.Many2many('request.tag', tracking=True)
@@ -31,13 +32,13 @@ class MaterialRequest(models.Model):
                                       ('purchase', 'Purchase'),
                                       ('pending', 'Pending'),
                                       ], compute="compute_request_stage", store=True)
-    
-    @api.depends('material_request_line_ids.is_available', 'material_request_line_ids.transferred', 'material_request_line_ids.purchased')
+
+    @api.depends('material_request_line_ids.is_available', 'material_request_line_ids.transferred', 'material_request_line_ids.purchased', 'state')
     def compute_request_stage(self):
         for rec in self:
-            if all(x.is_available and not x.transferred for x in rec.material_request_line_ids):
+            if all(x.is_available and not x.transferred for x in rec.material_request_line_ids) and rec.state in ['pending', 'in_progress']:
                 rec.request_stage = 'inventory'
-            elif all(not x.is_available and not x.purchased for x in rec.material_request_line_ids):
+            elif all(not x.is_available and not x.purchased for x in rec.material_request_line_ids) and rec.state in ['pending', 'in_progress']:
                 rec.request_stage = 'purchase'
             else:
                 rec.request_stage = 'pending'
