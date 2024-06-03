@@ -13,7 +13,7 @@ class ApprovalRequest(models.Model):
     department_id = fields.Many2one('hr.department', readonly=True)
     position_id = fields.Many2one('hr.job', readonly=True)
     id_no = fields.Char()
-    joining_date = fields.Date()
+    joining_date = fields.Date(readonly=True)
     last_emp_date = fields.Date('Last date for employee')
     reason = fields.Selection([('1', 'انتهاء العقد بالاتفاق بين الطرفين على انهاء العقد'),
                                ('2', 'فسخ العقد من قبل صاحب العمل'),
@@ -28,6 +28,7 @@ class ApprovalRequest(models.Model):
     def onchange_request_owner_id(self):
         self.department_id = self.request_owner_id.employee_id.department_id.id
         self.position_id = self.request_owner_id.employee_id.job_id.id
+        self.joining_date = self.request_owner_id.employee_id.contract_id.date_start
 
     @api.onchange('category_id')
     def onchange_category_id(self):
@@ -46,8 +47,9 @@ class ApprovalRequest(models.Model):
     #             rec.loan_flag = False
 
     def action_confirm(self):
-        if self.amount == 0 or self.quantity == 0:
-            raise UserError(_('Amount or Quantity must be more than Zero!!'))
+        if self.category_id.sequence_code == "loan_request":
+            if self.amount <= 0 or self.quantity <= 0:
+                raise UserError(_('Amount or Quantity must be more than Zero!!'))
         return super().action_confirm()
     
     def action_approve(self):
@@ -78,6 +80,7 @@ class ApprovalRequest(models.Model):
                 'payment_type': 'outbound',
                 'amount': self.amount,
                 'journal_id': self.journal_id.id,
+                'partner_type': 'supplier',
                 # Add other required fields
             }
             payment = self.env['account.payment'].create(payment_vals)
