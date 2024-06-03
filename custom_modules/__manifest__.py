@@ -11,6 +11,7 @@
         'views/branch_view.xml',
         'views/hr_employee_view.xml',
         'views/account_move_view.xml',
+        'views/hr_leave_view.xml',
     ],
     'installable': True,
     'application': True,
