@@ -16,5 +16,6 @@ class HrPayslip(models.Model):
 
     def action_payslip_done(self):
         res = super().action_payslip_done()
-        self.move_id.payment_method_selection = self.employee_id.payment_method_selection
+        for rec in self:
+            rec.move_id.payment_method_selection = rec.employee_id.payment_method_selection
         return res
