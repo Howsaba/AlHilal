@@ -7,7 +7,7 @@ class ApprovalRequest(models.Model):
     _inherit = 'approval.request'
 
     salary_attachment_id = fields.Many2one('hr.salary.attachment')
-    payment_id = fields.Many2one('account.payment')
+    journal_entries_id = fields.Many2one('account.move')
     journal_id = fields.Many2one('account.journal', domain="[('type', 'in', ['cash', 'bank'])]")
     loan_flag = fields.Boolean()
     department_id = fields.Many2one('hr.department', readonly=True)
@@ -37,21 +37,12 @@ class ApprovalRequest(models.Model):
         if self.category_id.sequence_code == 'loan_request':
             self.loan_flag = True
 
-
-    # @api.depends('category_id', 'request_status')
-    # def compute_loan_flag(self):
-    #     for rec in self:
-    #         if rec.category_id.sequence_code == 'loan_request' and rec.request_status == 'approved':
-    #             rec.loan_flag = True
-    #         else:
-    #             rec.loan_flag = False
-
     def action_confirm(self):
         if self.category_id.sequence_code == "loan_request":
             if self.amount <= 0 or self.quantity <= 0:
                 raise UserError(_('Amount or Quantity must be more than Zero!!'))
         return super().action_confirm()
-    
+
     def action_approve(self):
         res = super().action_approve()
         if self.request_status == 'approved':
@@ -73,20 +64,31 @@ class ApprovalRequest(models.Model):
                 self.send_message()
         return res
 
-    def create_payment(self):
-        if not self.payment_id:
-            payment_vals = {
-                'partner_id': self.request_owner_id.partner_id.id,
-                'payment_type': 'outbound',
-                'amount': self.amount,
+    def create_Journal_Entries(self):
+        if not self.journal_entries_id:
+            move_vals = {
                 'journal_id': self.journal_id.id,
-                'partner_type': 'supplier',
-                # Add other required fields
+                'date': self.joining_date,
+                'move_type': 'entry',
+                'ref': 'journal for loan',
+                'line_ids': [
+                    (0, 0, {
+                        'account_id': self.journal_id.default_account_id.id,
+                        'debit': 0,
+                        'credit': self.amount,
+                    }),
+                    (0, 0, {
+                        'account_id': self.journal_id.loan_account_id.id,
+                        'debit': self.amount,
+                        'credit': 0,
+                    }),
+                ]
             }
-            payment = self.env['account.payment'].create(payment_vals)
-            self.payment_id = payment.id
+
+            move = self.env['account.move'].create(move_vals)
+            self.journal_entries_id = move.id
         else:
-            raise UserError(_('Payment is already created'))
+            raise UserError(_('the entry is already created'))
 
     def send_message(self):
         users = self.env.ref('account.group_account_manager').users
@@ -110,9 +112,10 @@ class ApprovalRequest(models.Model):
         }
         return action
 
-    def action_view_payment(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_payments_payable')
-        action['domain'] = [('id', '=', self.payment_id.id)]
+    def action_view_Journal_Entries(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_move_journal_line')
+        action['domain'] = [('id', '=', self.journal_entries_id.id)]
+
         action['context'] = {
             'create': 0
         }
