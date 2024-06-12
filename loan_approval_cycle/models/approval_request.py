@@ -68,7 +68,7 @@ class ApprovalRequest(models.Model):
         if not self.journal_entries_id:
             move_vals = {
                 'journal_id': self.journal_id.id,
-                'date': self.joining_date,
+                'date': self.date,
                 'move_type': 'entry',
                 'ref': 'journal for loan',
                 'line_ids': [
