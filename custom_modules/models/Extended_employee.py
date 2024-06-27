@@ -1,6 +1,5 @@
 from odoo import models, fields
 
-
 class Employee2(models.Model):
     _inherit = "hr.employee"
 
@@ -13,11 +12,12 @@ class Employee2(models.Model):
     english_name = fields.Char(string='English Employee Name', required=True)
     employee_number = fields.Float(string='Employee Number', required=True)
     religion = fields.Selection(
-        [('muslim', 'Muslim'),
-         ('christian', 'Christian'),
-         ('other', 'Other')],
-        string='Religion')
+         [('muslim', 'Muslim'),
+          ('christian', 'Christian'),
+          ('other', 'Other')],
+         string='Religion')
     other_religion = fields.Char(string='Other Religion')
+
 
     insurance_no = fields.Char()
     policy_number = fields.Char()
@@ -49,6 +49,6 @@ class Employee2(models.Model):
          ('card', 'Employee Card')],
         default='account')
     contract_id = fields.Many2one(
-        'hr.contract', string='Current Contract',
+        'hr.contract', string='Current Contract', groups="base.group_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current contract of the employee',
         copy=False)
