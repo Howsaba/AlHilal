@@ -52,3 +52,11 @@ class Employee2(models.Model):
         'hr.contract', string='Current Contract', groups="base.group_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current contract of the employee',
         copy=False)
+
+
+    def get_overtime_from_work_entry(self, from_date, to_date):
+        work_entry_ids = self.env['hr.work.entry'].search([('employee_id', '=', self.id),
+                                                           ('date_start', '>=', from_date),
+                                                           ('date_stop', '<=', to_date)])
+        filtered_work_entry_ids = work_entry_ids.filtered(lambda x: x.work_entry_type_id.code == 'OVERTIME').mapped('duration')
+        return sum(filtered_work_entry_ids)

@@ -3,3 +3,4 @@ from . import Extended_employee
 from . import Add_branch
 from . import time_off
 from . import account_move
+from . import res_company
