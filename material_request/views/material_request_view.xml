@@ -1,0 +1,182 @@
+<odoo>
+    <data>
+
+        <record id="sequence_material_request" model="ir.sequence">
+            <field name="name">Material Request</field>
+            <field name="code">material.request</field>
+            <field name="prefix">MR</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="material_request_view_Search" model="ir.ui.view">
+            <field name="name">>material.request.view.search</field>
+            <field name="model">material.request</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter name="group_by_room_id" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_office_id" context="{'group_by': 'request_stage'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="material_request_view_form" model="ir.ui.view">
+            <field name="name">material.request.view.form</field>
+            <field name="model">material.request</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object"
+                                class="oe_highlight"/>
+                        <button name="action_create_purchase" invisible="state != 'pending'" string="Create Purchase"
+                                type="object" class="oe_highlight"
+                                groups="purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                        <button name="action_create_internal_transfer" invisible="state != 'pending'"
+                                string="Create Transfer" type="object" class="oe_highlight"
+                                groups="stock.group_stock_manager,stock.group_stock_user"/>
+                        <button name="action_in_progress" invisible="state != 'pending'" string="In Progress"
+                                type="object" class="oe_highlight"
+                                groups="stock.group_stock_manager,stock.group_stock_user"/>
+                        <button name="check_availability" invisible="state != 'pending'" string="Check Availability"
+                                type="object" class="oe_highlight"
+                                groups="stock.group_stock_manager,stock.group_stock_user"/>
+                        <button name="action_done" invisible="state != 'in_progress'" string="Done" type="object"
+                                class="oe_highlight"/>
+                        <button name="action_cancel" invisible="state != 'draft'" string="Cancel" type="object"
+                                class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,pending,in_progress,done,cancel"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="purchase_order_action" class="oe_stat_button" icon="oi-arrows-v" type="object"
+                                    groups="purchase.group_purchase_manager,purchase.group_purchase_user"
+                                    invisible="(state in ['draft', 'cancel'])">
+                                <div class="o_form_field o_stat_info">
+                                    <field name="purchase_count"/>
+                                    <span class="o_stat_text">Purchase</span>
+                                </div>
+                            </button>
+                            <button name="transfer_action" class="oe_stat_button" icon="oi-arrows-v" type="object"
+                                    groups="stock.group_stock_manager,stock.group_stock_user"
+                                    invisible="(state in ['draft', 'cancel'])">
+                                <div class="o_form_field o_stat_info">
+                                    <field name="picking_count"/>
+                                    <span class="o_stat_text">Transfer</span>
+                                </div>
+                            </button>
+                        </div>
+                        <field name="request_stage" invisible="1"/>
+                        <widget name="web_ribbon" title="Inventory"
+                                invisible="request_stage != 'inventory' or state not in ['pending', 'in_progress']"/>
+                        <widget name="web_ribbon" title="Purchase"
+                                invisible="request_stage != 'purchase' or state not in ['pending', 'in_progress']"/>
+                        <widget name="web_ribbon" title="Pending"
+                                invisible="request_stage != 'pending' or state not in ['pending', 'in_progress']"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_date" readonly="state != 'draft'"/>
+                                <field name="company_id"/>
+                                <field name="tag_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                                <field name="department_id" readonly="state != 'draft'"/>
+                                <field name="branch_id" readonly="state != 'draft'"/>
+                            </group>
+                            <group string="Inventory Info" groups="stock.group_stock_manager,stock.group_stock_user">
+                                <field name="operation_type_id" readonly="state not in ['draft', 'pending']"/>
+                                <field name="destination_id" readonly="state not in ['draft', 'pending']"/>
+                                <field name="source_id" readonly="state not in ['draft', 'pending']"/>
+                            </group>
+                            <group string="Purchase Info"
+                                   groups="purchase.group_purchase_manager,purchase.group_purchase_user">
+                                <field name="vendor_id" readonly="state not in ['draft', 'pending']"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="Products">
+                                <field name="material_request_line_ids" readonly="state != 'draft'">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="qty"/>
+                                        <field name="is_available"/>
+                                        <field name="purchased"
+                                               groups="purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                                        <field name="transferred"
+                                               groups="stock.group_stock_manager,stock.group_stock_user"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="material_request_view_tree" model="ir.ui.view">
+            <field name="name">material.request.view.tree</field>
+            <field name="model">material.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="request_date"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="material_request_action" model="ir.actions.act_window">
+            <field name="name">Material Request</field>
+            <field name="res_model">material.request</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Material Request found. Let's create one!
+                </p>
+            </field>
+        </record>
+
+        <record id="request_tag_action" model="ir.actions.act_window">
+            <field name="name">Request Tag</field>
+            <field name="res_model">request.tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Tags found. Let's create one!
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem
+                id="material_request_root_menu"
+                name="Material Request"
+                sequence="-1"
+                web_icon="material_request,static/description/icon.png"/>
+
+        <menuitem
+                id="material_request_menu"
+                name="Material Requests"
+                action="material_request.material_request_action"
+                parent="material_request.material_request_root_menu"
+                sequence="1"/>
+
+        <menuitem
+                id="request_tag_menu"
+                name="Tags"
+                action="material_request.request_tag_action"
+                parent="material_request.material_request_root_menu"
+                sequence="2"/>
+
+    </data>
+</odoo>

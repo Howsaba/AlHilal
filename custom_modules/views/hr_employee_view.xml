@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+<!--        employee view-->
+       <record id="hr_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.inherit.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/group" position="inside">
+                    <field name="branch_ids" widget="many2many_tags"/>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']/group" position="inside">
+                    <group string="Extra Info">
+                        <field name="passport_or_id_issue_ids" widget="many2many_tags"/>
+                        <field name="passport_or_id_issue_date"/>
+                        <field name="passport_or_id_expiry_date"/>
+                        <field name="english_name"/>
+                        <field name="employee_number"/>
+                        <field name="religion"/>
+                        <field name="other_religion" invisible="religion != 'other'"/>
+                    </group>
+                </xpath>
+                <xpath expr="//notebook/page[@name='personal_information']/group/group[@name='emergency']" position="inside">
+                    <field name="contact_address"/>
+                    <field name="relative_type"/>
+                </xpath>
+
+                 <xpath expr="//notebook" position="inside">
+                     <page name="insurance" string="Health insurance details">
+                         <group>
+                             <group>
+                                 <field name="insurance_no"/>
+                                 <field name="policy_number"/>
+                                 <field name="category"/>
+                                 <field name="activation_code"/>
+                             </group>
+                             <group>
+                                 <field name="cost"/>
+                                 <field name="insurance_council"/>
+                                 <field name="insurance_council_date"/>
+                             </group>
+                         </group>
+                     </page>
+                     <page name="payment" string="Payment Method Details">
+                         <group>
+                             <group>
+                                 <field name="payment_method_selection" widget="radio"/>
+                                 <field name="bank_name" invisible="payment_method_selection not in ['bank', 'transfer']" required="payment_method_selection in ['bank', 'transfer']"/>
+                                 <field name="bank_location" invisible="payment_method_selection not in ['bank', 'transfer']" required="payment_method_selection in ['bank', 'transfer']"/>
+                                 <field name="iban" invisible="payment_method_selection not in ['bank', 'transfer']" required="payment_method_selection in ['bank', 'transfer']"/>
+                                 <field name="bank_type" invisible="payment_method_selection not in ['bank', 'transfer']" required="payment_method_selection in ['bank', 'transfer']"/>
+                                 <field name="account_no" invisible="payment_method_selection not in ['bank', 'transfer']" required="payment_method_selection in ['bank', 'transfer']"/>
+                             </group>
+                             <group>
+                                 <field name="account_owner_name" invisible="payment_method_selection not in ['transfer']" required="payment_method_selection in ['transfer']"/>
+                                 <field name="account_owner_arabic_name" invisible="payment_method_selection not in ['transfer']" required="payment_method_selection in ['transfer']"/>
+                                 <field name="branch_name" invisible="payment_method_selection not in ['transfer']" required="payment_method_selection in ['transfer']"/>
+                                 <field name="branch_arabic_name" invisible="payment_method_selection not in ['transfer']" required="payment_method_selection in ['transfer']"/>
+                                 <field name="swift_code" invisible="payment_method_selection not in ['transfer']" required="payment_method_selection in ['transfer']"/>
+                                 <field name="sort_code" invisible="payment_method_selection not in ['transfer']" required="payment_method_selection in ['transfer']"/>
+                                 <field name="country" invisible="payment_method_selection not in ['transfer']" required="payment_method_selection in ['transfer']"/>
+                             </group>
+                         </group>
+                     </page>
+                 </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="subscription_form_view_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.view.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_subscription.sale_subscription_primary_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                        <page string="Membership Details">
+                            <group>
+                                <group>
+                                    <field name="age_group_id"/>
+                                    <field name="res_team_id"/>
+                                </group>
+                                <group>
+                                    <field name="session_id"/>
+                                </group>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.view.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="payment_term_id" position="after">
+                    <field name="branch_id"/>
+                </field>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                        <page string="Payment Details">
+                            <group>
+                                <group>
+                                    <field name="payment_method_id"/>
+                                    <field name="payment_status"/>
+                                </group>
+                            </group>
+                        </page>
+                    </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
