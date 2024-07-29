@@ -15,7 +15,8 @@
                 </field>
 
                 <field name="category_id" position="after">
-                     <field name="branch_id" required="customer_rank > 0"/>
+                    <field name="customer_rank" invisible="1"/>
+                    <field name="branch_id" required="customer_rank > 0"/>
                 </field>
 
                 <xpath expr="//span[hasclass('o_form_label')]" position="before">
