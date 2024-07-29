@@ -15,6 +15,7 @@
                 </field>
 
                 <field name="category_id" position="after">
+                    <field name="customer_rank" invisible="1"/>
                     <field name="branch_id" required="customer_rank > 0"/>
                 </field>
 
