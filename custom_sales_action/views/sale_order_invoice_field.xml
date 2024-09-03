@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <!-- Add the new field to the form view -->
             <xpath expr="//field[@name='date_order']" position="after">
-                <field name="invoice_sale_date"/>
+                <field name="invoice_sale_date" />
             </xpath>
         </field>
     </record>
