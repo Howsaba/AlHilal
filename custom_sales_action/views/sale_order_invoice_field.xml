@@ -1,0 +1,15 @@
+<odoo>
+    <!-- Inherit the sale.order form view -->
+    <record id="view_order_form_inherit_invoice_field" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.invoice.field</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+
+        <field name="arch" type="xml">
+            <!-- Add the new field to the form view -->
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="invoice_sale_date"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
