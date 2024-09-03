@@ -4,6 +4,7 @@
     'depends': ['sale','sale_subscription'],
     'data': [
         'views/sale_order_views.xml',
+        'views/sale_order_invoice_field.xml'
     ],
     'installable': True,
     'application': False,
