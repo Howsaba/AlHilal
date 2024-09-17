@@ -11,7 +11,7 @@
                     <field name="membership_in_arabic"/>
                 </xpath>
                 <xpath expr="//field[@name='invoice_mail_template_id']" position="after">
-                    <field name="branch_id"/>
+                    <field name="branch_id" options="{'no_create': True}"/>
                 </xpath>
             </field>
         </record>

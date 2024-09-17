@@ -11,7 +11,7 @@
                     <page string="Payment Details">
                             <group>
                                 <group>
-                                    <field name="branch_id"/>
+                                    <field name="branch_id" options="{'no_create': True}"/>
                                 </group>
                                 <group>
                                     <field name="payment_method_id"/>
