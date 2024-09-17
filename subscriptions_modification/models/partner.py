@@ -14,4 +14,4 @@ class ResPartner(models.Model):
     unique_id = fields.Char()
     birthday = fields.Date(required=True)
     nationality_id = fields.Many2one('res.country', required=True)
-    branch_id = fields.Many2one('res.branch', required=True)
+    branch_id = fields.Many2one('res.branch')

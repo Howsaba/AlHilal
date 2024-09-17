@@ -12,7 +12,7 @@
                 </xpath>
                 <xpath expr="//form[@name='Product Template']/sheet[@name='product_form']/notebook[1]/page[@name='general_information']/group[1]/group[@name='group_standard_price']/field[@name='company_id']"
                        position="after">
-                    <field name="branch_id"/>
+                    <field name="branch_id" options="{'no_create': True}"/>
                 </xpath>
                 <xpath expr="//div[@name='options']" position="inside">
                     <span class="d-inline-block">
