@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <record id="view_res_team_form_inherit" model="ir.ui.view">
+            <field name="name">res.team.form.inherit</field>
+            <field name="model">res.team</field>
+            <field name="inherit_id" ref="subscriptions_modification.res_team_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='branch_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+               <record id="view_res_coach_form_inherit" model="ir.ui.view">
+            <field name="name">res.coach.form.inherit</field>
+            <field name="model">res.coach</field>
+            <field name="inherit_id" ref="subscriptions_modification.res_coach_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='branch_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+<record id="view_age_group_form_inherit" model="ir.ui.view">
+            <field name="name">age.group.form.inherit</field>
+            <field name="model">age.group</field>
+            <field name="inherit_id" ref="subscriptions_modification.age_group_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='branch_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>
