@@ -6,11 +6,10 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     branch_id = fields.Many2one('res.branch', string='Branch',
-                                domain=lambda self: [('id', 'in', self._get_user_branch_ids())],
+                                domain=lambda self: [('id', 'in', self.env.user.branch_ids.ids)],
                                 default=lambda self: self.env.user.branch_id.id)
 
-    def _get_user_branch_ids(self):
-        return self.env.user.branch_ids.ids
+
 
     @api.onchange('branch_ids')
     def _onchange_branch_ids(self):

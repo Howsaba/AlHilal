@@ -4,7 +4,8 @@
     'summary': 'Branches Groups',
     'sequence': -1,
     'depends': ['base', 'sale_subscription', 'hr','subscriptions_modification'],
-    'data': ["views/res_users_branches.xml",
+    'data': ["security/security.xml",
+        "views/res_users_branches.xml",
              "views/edit_branches_views.xml"
 
     ],
