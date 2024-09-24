@@ -20,7 +20,7 @@
                 <data>
                     <field name="partner_id" position="after">
 <!--                        <field name="code" invisible="1"/>-->
-                        <field name="branch_id" invisible="picking_type_code != 'outgoing'"/>
+                        <field name="branch_id"/>
                     </field>
 
                 </data>
