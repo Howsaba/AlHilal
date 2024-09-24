@@ -8,3 +8,4 @@ from . import sale_order
 from . import product_template
 from . import sale_subscription_plan
 from . import stock_picking_inherit
+from . import stock_location_inherit
