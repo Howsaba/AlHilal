@@ -47,11 +47,11 @@
 </record>
 
 
-<!--    <record id="access_res_branch" model="ir.rule">-->
-<!--    <field name="name">Branch Access for Users</field>-->
-<!--    <field name="model_id" ref="subscriptions_modification.model_res_branch"/>-->
-<!--    <field name="domain_force">[('id', 'in', user.branch_ids.ids)]</field>-->
-<!--</record>-->
+    <record id="access_res_branch" model="ir.rule">
+    <field name="name">Branch Access for Users</field>
+    <field name="model_id" ref="subscriptions_modification.model_res_branch"/>
+    <field name="domain_force">[('id', 'in', user.branch_ids.ids)]</field>
+</record>
 
     <record id="access_product_template" model="ir.rule">
     <field name="name">subscriptions_modification.model_product_template</field>
