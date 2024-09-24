@@ -7,3 +7,4 @@ from . import partner_inherit_domain
 from . import sale_order
 from . import product_template
 from . import sale_subscription_plan
+from . import stock_picking_inherit
