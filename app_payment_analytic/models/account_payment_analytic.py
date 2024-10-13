@@ -7,9 +7,8 @@ class AccountPayment(models.Model):
     _name = "account.payment"
     _inherit = ["account.payment", "analytic.mixin"]
 
-
-    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
-        result = super(AccountPayment, self)._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
+    def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
+        result = super(AccountPayment, self)._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance)
         for move_line in result:
             if self.analytic_distribution:
                 move_line.update({
