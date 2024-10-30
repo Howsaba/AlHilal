@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
         for record in self:
             if record.start_date and record.plan_id and record.plan_id.billing_period_days:
                 billing_period_days = record.plan_id.billing_period_days
-                record.end_date = record.start_date + timedelta(days=billing_period_days)
+                record.end_date = record.start_date + timedelta(days=billing_period_days-1)
             else:
                 False
 
@@ -30,5 +30,6 @@ class SaleOrder(models.Model):
                         if hasattr(line, 'deferred_end_date'):
                             # Update deferred_end_date with the sale order's end_date
                             line.deferred_end_date = order.end_date
+                            line.name = line.product_id.name
 
         return moves
