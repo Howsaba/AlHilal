@@ -10,7 +10,7 @@ class Employee2(models.Model):
     contact_address = fields.Text(string='Contact Address')
     relative_type = fields.Text(string='Relative Type')
     english_name = fields.Char(string='English Employee Name', required=True)
-    employee_number = fields.Float(string='Employee Number', required=True)
+    employee_number = fields.Integer(string='Employee Number', required=True)
     religion = fields.Selection(
          [('muslim', 'Muslim'),
           ('christian', 'Christian'),
