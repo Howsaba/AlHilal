@@ -15,6 +15,13 @@ class SaleOrder(models.Model):
             else:
                 False
 
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+
+        res._compute_end_date()
+
+        return res
     def _create_invoices(self, grouped=False, final=False, date=None):
         # Call the original method to create invoices
         moves = super(SaleOrder, self)._create_invoices(grouped=grouped, final=final, date=date)
