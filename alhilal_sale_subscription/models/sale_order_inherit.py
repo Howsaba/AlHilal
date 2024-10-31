@@ -31,6 +31,7 @@ class SaleOrder(models.Model):
             for invoice in moves:
                 if invoice.invoice_origin == order.name:
                     for line in invoice.invoice_line_ids:
+                        if line.product_id.recurring_invoice==True:
                             line.deferred_end_date = order.end_date
                             line.name = line.product_id.name
 
