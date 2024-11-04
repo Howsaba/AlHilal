@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_sale_subscription_plan_form" model="ir.ui.view">
+        <field name="name">sale.subscription.plan.form</field>
+        <field name="model">sale.subscription.plan</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_plan_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_info']/div[1]" position="after">
+                <field name="billing_period_days"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
