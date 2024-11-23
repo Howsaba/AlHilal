@@ -16,3 +16,5 @@ class AccountPayment(models.Model):
         for record in self:
             if record.state == 'draft':
                 record.action_cancel()
+            else:
+                raise UserError("The record must be in the 'Draft' state to be canceled.")
