@@ -11,3 +11,10 @@ class AccountPayment(models.Model):
                 payment.state = 'draft'
 
 
+
+    def cancel_records(self):
+        for record in self:
+            if record.state == 'draft':
+                record.action_cancel()
+
+
