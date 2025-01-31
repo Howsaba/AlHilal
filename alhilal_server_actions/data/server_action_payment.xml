@@ -1,0 +1,44 @@
+<odoo>
+
+
+<record id="server_action_payment_confirm_to_draft" model="ir.actions.server">
+        <field name="name">Reset to Draft</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_confirm_to_draft()</field>
+    </record>
+
+ <record id="server_action_cancel_records" model="ir.actions.server">
+        <field name="name">Cancel Records</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.cancel_records()</field>
+    </record>
+
+
+    <record id="server_action_remove_reconcile" model="ir.actions.server">
+    <field name="name">Remove Reconcile</field>
+    <field name="model_id" ref="account.model_account_payment"/>
+    <field name="binding_model_id" ref="account.model_account_payment"/>
+    <field name="binding_view_types">list,form</field>
+    <field name="state">code</field>
+    <field name="code">
+        records.remove_move_reconcile()
+    </field>
+</record>
+
+  <record id="server_action_account_move_reset_to_draft" model="ir.actions.server">
+            <field name="name">Reset to Draft</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">records.action_reset_to_draft()</field>
+        </record>
+
+
+    </odoo>
