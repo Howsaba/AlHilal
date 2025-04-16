@@ -423,8 +423,8 @@ class AlhilalInvoiceApi(http.Controller):
                     "tax_ids": [(6, 0, company_tax.ids)],
                 }
                 if line.get("product") == "subscription":
-                    line_data["start_date"] = line["start_date"]
-                    line_data["end_date"] = line["end_date"]
+                    line_data["deferred_start_date"] = line["start_date"]
+                    line_data["deferred_end_date"] = line["end_date"]
                 lines.append(
                     (
                         0,
