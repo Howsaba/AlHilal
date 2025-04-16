@@ -413,20 +413,23 @@ class AlhilalInvoiceApi(http.Controller):
                     if analytic_accounts
                     else {}
                 )
-
+                line_data = {  # Use (0, 0, {values}) format for creating new records
+                    "product_id": product.id,
+                    "quantity": line["quantity"],
+                    "price_unit": line["price_unit"],
+                    "discount": line.get("discount", 0.0),
+                    "analytic_distribution": analytic_distribution,
+                    "name": line.get("label", product.name),
+                    "tax_ids": [(6, 0, company_tax.ids)],
+                }
+                if line.get("product") == "subscription":
+                    line_data["start_date"] = line["start_date"]
+                    line_data["end_date"] = line["end_date"]
                 lines.append(
                     (
                         0,
                         0,
-                        {  # Use (0, 0, {values}) format for creating new records
-                            "product_id": product.id,
-                            "quantity": line["quantity"],
-                            "price_unit": line["price_unit"],
-                            "discount": line.get("discount", 0.0),
-                            "analytic_distribution": analytic_distribution,
-                            "name": line.get("label", product.name),
-                            "tax_ids": [(6, 0, company_tax.ids)],
-                        },
+                        line_data,
                     )
                 )
 
