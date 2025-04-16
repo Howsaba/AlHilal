@@ -8,6 +8,7 @@ class AnalyticDistribution(models.Model):
         "account.analytic.account",
         "branch_id",
         string="Sales Analytic Distributions",
+        required=True,
     )
 
 
