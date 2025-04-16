@@ -5,7 +5,7 @@
     <field name="inherit_id" ref="subscriptions_modification.res_branch_view_form" />
     <field name="arch" type="xml">
       <xpath expr="//field[@name='company_id']" position="after">
-        <field name="sales_analytic_distributions" widget="many2many_tags" required="1" />
+        <field name="sales_analytic_distributions" required="1" widget="selection" />
       </xpath>
     </field>
   </record>
