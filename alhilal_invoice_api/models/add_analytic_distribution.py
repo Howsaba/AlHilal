@@ -10,7 +10,7 @@ class AnalyticDistribution(models.Model):
     #     string="Sales Analytic Distributions",
     #     required=True,
     # )
-    sales_analytic_distributions = fields.Many2many(
+    sales_analytic_distributions = fields.Many2one(
         "account.analytic.account",
         string="Sales Analytic Distributions",
         required=True,
