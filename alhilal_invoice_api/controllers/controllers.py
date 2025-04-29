@@ -30,6 +30,7 @@ def validate_token(func):
             )
         if access_token.lower().startswith("bearer "):
             key = access_token[7:]
+
         api_key_data = (
             request.env["res.users.apikeys"]
             .sudo()
@@ -38,13 +39,17 @@ def validate_token(func):
 
         user_id = api_key_data["user_id"] if api_key_data else None
         user = request.env["res.users"].sudo().browse(user_id) if user_id else None
+
         if not user:
             return Response(
-                json.dumps({"msg": "Token is invalid or expired"}, indent=4),
+                json.dumps(
+                    {"msg": "Token is invalid or expired, but will be ignored"},
+                    indent=4,
+                ),
                 content_type="application/json;charset=utf-8",
-                status=401,
+                status=200,
             )
-
+        request.session.logout()
         request.session.uid = user.id
         request.update_env(user=user.id)
 
@@ -63,7 +68,7 @@ class AlhilalInvoiceApi(http.Controller):
 
     @validate_token
     @http.route(
-        "/v1/api/create_invoice",
+        "/v1/api/alhilal/create_invoice",
         auth="none",
         type="http",
         methods=["POST"],
@@ -114,7 +119,8 @@ class AlhilalInvoiceApi(http.Controller):
                 )
 
                 # TODO update company_id to existing company
-            company_id = 2
+            company_id = 1  # local
+            # company_id = 2 # live
             company = request.env["res.company"].browse(company_id)
             if not company:
                 return Response(
@@ -159,11 +165,14 @@ class AlhilalInvoiceApi(http.Controller):
                     content_type="application/json;charset=utf-8",
                     status=404,
                 )
-            analytic_accounts = branch.sales_analytic_distributions
+            analytic_accounts = branch.sales_analytic_distribution
             if not analytic_accounts:
                 return Response(
                     json.dumps(
-                        {"error": "Analytic account not found", "status_code": 404},
+                        {
+                            "error": "Branch has no analytic account distribution",
+                            "status_code": 404,
+                        },
                         sort_keys=True,
                         indent=4,
                     ),
@@ -311,20 +320,17 @@ class AlhilalInvoiceApi(http.Controller):
                         )
                     moths = period // 30
                     if moths == 1:
-                        # product_id = 45  # Example product ID for subscription
-                        product_id = 228
+                        product_id = 45  # local
+                        # product_id = 228  # live
                     elif moths == 2:
-                        # product_id = 46  # Example product ID for subscription
-                        product_id = 229
+                        product_id = 46  # local
+                        # product_id = 229  # live
                     elif moths == 3:
-                        product_id = 47  # Example product ID for subscription
-                        # product_id = 47
+                        product_id = 47  # local and live
                     elif moths == 6:
-                        product_id = 48  # Example product ID for subscription
-                        # product_id = 48
+                        product_id = 48  # local and live
                     elif moths == 9:
-                        product_id = 49  # Example product ID for subscription
-                        # product_id = 49
+                        product_id = 49  # local and live
                     else:
                         return Response(
                             json.dumps(
@@ -343,7 +349,6 @@ class AlhilalInvoiceApi(http.Controller):
                         [
                             ("billing_period_value", "=", moths),
                             ("billing_period_unit", "=", "month"),
-                            # ("company_id", "=", company.id),
                         ],
                         limit=1,
                     )
@@ -377,8 +382,8 @@ class AlhilalInvoiceApi(http.Controller):
 
                 elif line.get("product") == "clothes":
 
-                    # product_id = 44  # Example product ID for clothes
-                    product_id = 293
+                    product_id = 44  # local
+                    # product_id = 293  # live
                     product = request.env["product.product"].search(
                         [("id", "=", product_id)]
                     )
@@ -434,7 +439,8 @@ class AlhilalInvoiceApi(http.Controller):
                 )
 
             # TODO update partner_id to existing partner
-            partner_id = 24803  # Example partner ID
+            partner_id = 70  # local
+            # partner_id = 24803  # live
             partner = request.env["res.partner"].browse(partner_id)
             if not partner:
                 return Response(
@@ -510,7 +516,7 @@ class AlhilalInvoiceApi(http.Controller):
 
             invoice_details = {
                 "invoice_id": invoice.id,
-                "invoice_number": invoice.name,
+                "invoice_ref": invoice.name,
             }
             res = {
                 "msg": "Your invoice was created successfully",
@@ -523,6 +529,281 @@ class AlhilalInvoiceApi(http.Controller):
                 status=200,
             )
         except Exception as e:
+            return Response(
+                json.dumps(
+                    {"error": str(e), "status_code": 500}, sort_keys=True, indent=4
+                ),
+                content_type="application/json;charset=utf-8",
+                status=500,
+            )
+
+    @validate_token
+    @http.route(
+        "/v1/api/alhilal/create_payment",
+        methods=["POST"],
+        type="http",
+        auth="none",
+        csrf=False,
+    )
+    def create_payment(self):
+        _logger.info("Payment API Called")
+        if not self.check_user_permissions():
+            return Response(
+                json.dumps(
+                    {"error": "User does not have permission to create payments"},
+                    indent=4,
+                ),
+                content_type="application/json;charset=utf-8",
+                status=403,
+            )
+        company_id = 1  # local
+        # company_id = 2 # live
+        company = request.env["res.company"].browse(company_id)
+        if not company:
+            return Response(
+                json.dumps(
+                    {"error": "Company not found", "status_code": 404}, indent=4
+                ),
+                content_type="application/json;charset=utf-8",
+                status=404,
+            )
+        try:
+            data = json.loads(request.httprequest.data)
+
+            required_fields = [
+                "invoice_ref",
+                "amount",
+                "date",
+                "journal_id",
+            ]
+            if not all(field in data for field in required_fields):
+                return Response(
+                    json.dumps(
+                        {"error": "Missing required fields", "status_code": 400},
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=400,
+                )
+
+            try:
+                date = fields.Date.to_date(data["date"])
+            except ValueError:
+                return Response(
+                    json.dumps(
+                        {
+                            "error": "Invalid date format. Expected YYYY-MM-DD",
+                            "status_code": 400,
+                        },
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=400,
+                )
+
+            if not isinstance(data["amount"], (int, float)) or data["amount"] <= 0:
+                return Response(
+                    json.dumps(
+                        {
+                            "error": "Amount must be a positive number",
+                            "status_code": 400,
+                        },
+                        sort_keys=True,
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=400,
+                )
+
+            invoice = request.env["account.move"].search(
+                [("name", "=", data["invoice_ref"]), ("company_id", "=", company.id)],
+                limit=1,
+            )
+            if not invoice:
+                return Response(
+                    json.dumps(
+                        {"error": "Invoice not found", "status_code": 404},
+                        sort_keys=True,
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=404,
+                )
+
+            if invoice.state == "draft":
+                return Response(
+                    json.dumps(
+                        {
+                            "error": f"Invoice '{invoice.name}' is still in draft state",
+                            "status_code": 400,
+                        },
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=400,
+                )
+            if invoice.payment_state == "paid":
+                return Response(
+                    json.dumps(
+                        {
+                            "error": "Invoice already paid",
+                            "status_code": 400,
+                        },
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=400,
+                )
+            if data["amount"] > invoice.amount_residual:
+                return Response(
+                    json.dumps(
+                        {
+                            "error": "Payment amount exceeds the remaining balance on the invoice",
+                            "invoice_total": invoice.amount_total,
+                            "amount_due": invoice.amount_residual,
+                            "amount_received": data["amount"],
+                            "status_code": 400,
+                        },
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=400,
+                )
+
+            partner = invoice.partner_id
+            if not partner.exists():
+                return Response(
+                    json.dumps(
+                        {"error": "Partner not found on invoice", "status_code": 404},
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=404,
+                )
+
+            journal = (
+                request.env["account.journal"]
+                .sudo()
+                .search(
+                    [
+                        ("id", "=", data["journal_id"]),
+                        ("type", "in", ["cash", "bank"]),
+                        ("company_id", "=", company.id),
+                    ],
+                    limit=1,
+                )
+            )
+            if not journal:
+                return Response(
+                    json.dumps(
+                        {"error": "Journal not found", "status_code": 404},
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=404,
+                )
+            # if journal.company_id.id != invoice.company_id.id:
+            #     return Response(
+            #         json.dumps(
+            #             {
+            #                 "error": "Journal and Invoice belong to different companies",
+            #                 "status_code": 400,
+            #             },
+            #             indent=4,
+            #         ),
+            #         content_type="application/json;charset=utf-8",
+            #         status=400,
+            #     )
+            if (
+                journal.currency_id
+                and invoice.currency_id
+                and journal.currency_id != invoice.currency_id
+            ):
+                return Response(
+                    json.dumps(
+                        {
+                            "error": "Currency mismatch between journal and invoice",
+                            "invoice_currency": invoice.currency_id.name,
+                            "journal_currency": journal.currency_id.name,
+                            "status_code": 400,
+                        },
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=400,
+                )
+
+            analytic_distribution = {}
+            if invoice.branch_id.sales_analytic_distribution:
+                analytic_distribution = {
+                    invoice.branch_id.sales_analytic_distribution.id: 100.0
+                }
+            if not analytic_distribution:
+                return Response(
+                    json.dumps(
+                        {
+                            "error": "No valid analytic distributions found for branch",
+                            "status_code": 404,
+                        },
+                        indent=4,
+                    ),
+                    content_type="application/json;charset=utf-8",
+                    status=404,
+                )
+
+            # payment_vals = {
+            #     "payment_type":"inbound",
+            #     "partner_type": "customer",
+            #     "partner_id": invoice.partner_id.id,
+            #     "amount": data["amount"],
+            #     "date": date,
+            #     "journal_id": journal.id,
+            #     "communication": f"Payment for Invoice {invoice.name}",
+            #     "invoice_ids": [(6, 0, [invoice.id])],
+            #     "analytic_distribution": analytic_distribution,
+            # }
+            #
+            # payment = request.env["account.payment"].create(payment_vals)
+            # payment.action_post()
+
+            wizard = (
+                request.env["account.payment.register"]
+                .with_context(
+                    active_model="account.move",
+                    active_ids=[invoice.id],
+                )
+                .create(
+                    {
+                        "payment_date": date,
+                        "journal_id": journal.id,
+                        "amount": data["amount"],
+                    }
+                )
+            )
+
+            wizard_action = wizard.action_create_payments()
+            payment = request.env["account.payment"].browse(wizard_action["res_id"])
+
+            payment.analytic_distribution = analytic_distribution
+
+            _logger.info(
+                "Payment %s created for invoice %s", payment.name, invoice.name
+            )
+
+            res = {
+                "msg": "Payment created successfully",
+                "payment_id": payment.id,
+                "payment_ref": payment.name,
+            }
+            return Response(
+                json.dumps(res, sort_keys=True, indent=4),
+                content_type="application/json;charset=utf-8",
+                status=200,
+            )
+
+        except Exception as e:
+            _logger.error("Exception in create_payment: %s", str(e))
+            print("EXCEPTION:", str(e))
             return Response(
                 json.dumps(
                     {"error": str(e), "status_code": 500}, sort_keys=True, indent=4
