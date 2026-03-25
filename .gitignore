@@ -4,4 +4,4 @@ __pycache__/
 .vscode/
 .idea/
 pyrightconfig.json
-./scripts
+scripts
